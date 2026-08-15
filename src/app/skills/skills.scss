@@ -1,0 +1,208 @@
+.skills {
+  position: relative;
+  background: #0e0e10;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  padding: 4rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+
+  &.visible {
+    opacity: 1;
+  }
+}
+
+// ---------- BRILHO DE FUNDO ----------
+.bg-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 143, 171, 0.12) 0%, transparent 70%);
+  animation: pulse-bg 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse-bg {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+// ---------- PARTÍCULAS DE FUNDO ----------
+.bg-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  .particle {
+    position: absolute;
+    color: #ff8fab;
+    opacity: 0.5;
+    font-size: 1.2rem;
+    text-shadow: 0 0 8px rgba(255, 143, 171, 0.6);
+    transition: transform 0.2s linear;
+  }
+
+  .p1 { top: 10%; left: 15%; }
+  .p2 { top: 20%; right: 20%; }
+  .p3 { top: 60%; left: 8%; }
+  .p4 { top: 70%; right: 12%; }
+  .p5 { top: 40%; left: 50%; }
+}
+
+// ---------- TÍTULO ----------
+.skills-title {
+  position: relative;
+  z-index: 2;
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #ff8fab;
+  text-shadow: 0 0 20px rgba(255, 143, 171, 0.4);
+
+  .title-cursor {
+    display: inline-block;
+    margin-left: 4px;
+    opacity: 0;
+
+    &.blink {
+      opacity: 1;
+      animation: blink 0.8s step-end infinite;
+    }
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+// ---------- ÓRBITA DE TECNOLOGIAS ----------
+.skills-orbit {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 620px;
+  height: 340px;
+}
+
+.tech-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -22px;
+  margin-left: -70px;
+  width: 140px;
+  background: rgba(255, 201, 221, 0.08);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 143, 171, 0.3);
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #eaeaea;
+  text-align: center;
+  opacity: 0;
+  cursor: default;
+  transition: box-shadow 0.3s ease, background 0.3s ease, opacity 0.6s ease;
+
+  .skills-orbit.show & {
+    opacity: 1;
+  }
+
+  &:hover {
+    background: rgba(255, 143, 171, 0.2);
+    box-shadow: 0 0 25px rgba(255, 143, 171, 0.6);
+
+    .tech-tooltip { opacity: 1; transform: translateY(-8px); }
+    .tech-particles i { opacity: 1; }
+  }
+
+  .tech-tooltip {
+    position: absolute;
+    top: -34px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background: #1a1a1d;
+    color: #ff8fab;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+
+  .tech-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    i {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #ff8fab;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      box-shadow: 0 0 6px rgba(255, 143, 171, 0.8);
+    }
+    i:nth-child(1) { top: -6px; left: 10%; }
+    i:nth-child(2) { bottom: -6px; left: 50%; }
+    i:nth-child(3) { top: 40%; right: -8px; }
+  }
+}
+
+// ---------- TERMINAL DO GATINHO (integrado, não mais no canto) ----------
+.cat-terminal {
+  position: relative;
+  z-index: 2;
+  width: 280px;
+  background: rgba(20, 20, 22, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 143, 171, 0.35);
+  border-radius: 14px;
+  padding: 1.2rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #cfcfcf;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  animation: float-terminal 4s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(255, 143, 171, 0.15);
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .term-line {
+    margin: 0.2rem 0;
+    color: #ff8fab;
+  }
+
+  .cat-ascii {
+    margin-top: 0.5rem;
+    color: #eaeaea;
+    white-space: pre;
+    font-size: 0.85rem;
+    line-height: 1.3;
+  }
+}
+
+@keyframes float-terminal {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}

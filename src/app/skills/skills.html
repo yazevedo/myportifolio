@@ -1,0 +1,46 @@
+<section class="skills" #skillsSection [class.visible]="sectionVisible()">
+
+  <div class="bg-glow"></div>
+
+  <div class="bg-particles">
+    <span class="particle p1" [style.transform]="'translateY(' + (-scrollProgress() * 60) + 'px)'">✦</span>
+    <span class="particle p2" [style.transform]="'translateY(' + (-scrollProgress() * 100) + 'px)'">✧</span>
+    <span class="particle p3" [style.transform]="'translateY(' + (-scrollProgress() * 40) + 'px)'">✦</span>
+    <span class="particle p4" [style.transform]="'translateY(' + (-scrollProgress() * 80) + 'px)'">✧</span>
+    <span class="particle p5" [style.transform]="'translateY(' + (-scrollProgress() * 50) + 'px)'">✦</span>
+  </div>
+
+  <h2 class="skills-title">
+    {{ titleText() }}<span class="title-cursor" [class.blink]="titleDone()">|</span>
+  </h2>
+
+  <div class="skills-orbit" [class.show]="techsVisible()">
+    @for (tech of techs(); track tech.name) {
+      <div
+        class="tech-item"
+        [style.transform]="'translate(' + tech.x + 'px, ' + tech.y + 'px)'"
+      >
+        <span class="tech-name">{{ tech.name }}</span>
+        <span class="tech-tooltip">{{ tech.description }}</span>
+        <span class="tech-particles">
+          <i></i><i></i><i></i>
+        </span>
+      </div>
+    }
+  </div>
+
+  <div class="cat-terminal" [class.show]="catStage() !== 'idle'">
+    @if (catStage() !== 'idle') {
+      <p class="term-line">$ sudo create_cat</p>
+    }
+    @if (catStage() === 'loading' || catStage() === 'creating' || catStage() === 'done') {
+      <p class="term-line">initializing...</p>
+      <p class="term-line">{{ '█'.repeat(catProgress() / 4) }} {{ catProgress() }}%</p>
+    }
+    @if (catStage() === 'creating' || catStage() === 'done') {
+      <p class="term-line">creating cat...</p>
+      <pre class="cat-ascii">{{ catAscii() }}</pre>
+    }
+  </div>
+
+</section>

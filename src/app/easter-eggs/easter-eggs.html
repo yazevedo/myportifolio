@@ -1,0 +1,33 @@
+<div class="easter-eggs">
+
+  @if (kittyVisible()) {
+    <img
+      src="/imagens/hello-kitty-rosto.jpeg"
+      alt="Kitty explorando"
+      class="wandering-kitty"
+      [style.transform]="'translate(' + kittyX() + 'px, ' + kittyY() + 'px)'"
+    />
+  }
+
+  @if (showExploringMsg()) {
+    <div class="mini-terminal">
+      <p>&gt; movement detected...</p>
+      <p>&gt; kitty.exe is exploring...</p>
+    </div>
+  }
+
+  @if (showConfusedKitty()) {
+    <img src="/imagens/hello-kitty-confusa.jpeg" alt="Kitty confusa" class="confused-kitty" />
+  }
+
+  @if (overlayMode() !== 'none') {
+    <div class="overlay" [class.dark]="overlayMode() === 'backspace'">
+      <div class="terminal-box">
+        @for (line of terminalLines(); track $index) {
+          <p>{{ line }}</p>
+        }
+      </div>
+    </div>
+  }
+
+</div>

@@ -1,0 +1,83 @@
+.easter-eggs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+.wandering-kitty {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+  filter: drop-shadow(0 0 12px rgba(255, 143, 171, 0.6));
+}
+
+.confused-kitty {
+  position: fixed;
+  bottom: 6%;
+  right: 6%;
+  top: auto;
+  left: auto;
+  transform: none;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 10001;
+  animation: pop-in-corner 0.35s ease;
+  filter: drop-shadow(0 0 20px rgba(255, 143, 171, 0.7));
+}
+
+@keyframes pop-in-corner {
+  from { transform: scale(0.6) translateY(20px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.mini-terminal {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Courier New', monospace;
+  color: #ff8fab;
+  font-size: 0.85rem;
+  text-align: center;
+  background: rgba(14, 14, 16, 0.85);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  animation: fade-in-up 0.4s ease;
+
+  p { margin: 0.2rem 0; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(14, 14, 16, 0.6);
+
+  &.dark {
+    background: rgba(14, 14, 16, 0.9);
+  }
+}
+
+.terminal-box {
+  font-family: 'Courier New', monospace;
+  color: #eaeaea;
+  font-size: 1.1rem;
+  text-align: center;
+
+  p { margin: 0.3rem 0; }
+}

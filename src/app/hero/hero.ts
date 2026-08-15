@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, signal, computed, afterNextRender } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,34 +6,30 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './hero.html',
-  styleUrl: './hero.scss'   // <-- aqui está o problema
+  styleUrl: './hero.scss'
 })
-export class HeroComponent implements OnInit, OnDestroy {
+export class HeroComponent implements OnDestroy {
 
-  // --- Efeito de digitação ---
   private prefix = "HI! I'M ";
   private name = 'YASMIN';
   private fullText = this.prefix + this.name;
 
-  displayedText = '';
+  displayedText = signal('');
+  typingDone = signal(false);
   private charIndex = 0;
   private typingTimeout: any;
 
-  get displayedPrefix(): string {
-    return this.displayedText.slice(0, this.prefix.length);
-  }
+  displayedPrefix = computed(() => this.displayedText().slice(0, this.prefix.length));
+  displayedName = computed(() => this.displayedText().slice(this.prefix.length));
 
-  get displayedName(): string {
-    return this.displayedText.slice(this.prefix.length);
-  }
+  avatarOpen = '/imagens/avatar-animado-olho-aberto.jpeg';
+  avatarClosed = '/imagens/avatar-animado-olho-fechado.jpeg';
+  currentAvatar = signal(this.avatarOpen);
 
-  // --- Avatar com troca no hover ---
- avatarOpen = '/imagens/avatar-animado-olho-aberto.jpeg';
- avatarClosed = '/imagens/avatar-animado-olho-fechado.jpeg';
-  currentAvatar = this.avatarOpen;
-
-  ngOnInit(): void {
-    this.typeWriter();
+  constructor() {
+    afterNextRender(() => {
+      this.typeWriter();
+    });
   }
 
   ngOnDestroy(): void {
@@ -42,15 +38,16 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   private typeWriter(): void {
     if (this.charIndex < this.fullText.length) {
-      this.displayedText += this.fullText.charAt(this.charIndex);
+      this.displayedText.update(text => text + this.fullText.charAt(this.charIndex));
       this.charIndex++;
-      // velocidade "natural" de digitação (varia um pouco)
       const delay = 70 + Math.random() * 60;
       this.typingTimeout = setTimeout(() => this.typeWriter(), delay);
+    } else {
+      this.typingDone.set(true);
     }
   }
 
   onAvatarHover(hovering: boolean): void {
-    this.currentAvatar = hovering ? this.avatarClosed : this.avatarOpen;
+    this.currentAvatar.set(hovering ? this.avatarClosed : this.avatarOpen);
   }
 }

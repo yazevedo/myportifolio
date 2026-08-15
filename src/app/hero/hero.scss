@@ -4,6 +4,9 @@
   padding: 2rem 4rem;
   font-family: 'Poppins', sans-serif;
   overflow: hidden;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 // ---------- HEADER ----------
@@ -14,14 +17,31 @@
   padding-bottom: 2rem;
 
   .logo {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.4rem;
     font-size: 1.4rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #ff8fab;
+    font-family: 'Playfair Display', 'Poppins', serif; // fonte mais elegante, com serifa
 
-    .logo-bow { font-size: 1.1rem; }
+    .logo-bow-img {
+      position: absolute;
+      top: -14px;
+      left: -6px;
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      transform: rotate(-18deg);
+      z-index: 2;
+    }
+
+    .logo-text {
+      position: relative;
+      z-index: 0;
+      letter-spacing: 0.03em;
+    }
   }
 
   .nav {
@@ -52,16 +72,21 @@
     color: #4a2b35;
     border: none;
     border-radius: 999px;
-    padding: 0.5rem 1.2rem;
+    padding: 0.5rem 0.7rem 0.5rem 1.2rem;
     font-weight: 600;
     font-size: 0.8rem;
     cursor: pointer;
+    overflow: visible;
 
     .btn-icon {
-      width: 20px;
-      height: 20px;
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
       border-radius: 50%;
       object-fit: cover;
+      display: block;
+      transform: scale(1.7);
+      transform-origin: center;
     }
   }
 }
@@ -88,7 +113,11 @@
     .cursor {
       display: inline-block;
       color: #ff8fab;
-      animation: blink 0.8s step-end infinite;
+      opacity: 1;
+
+      &.blinking {
+        animation: blink 0.8s step-end infinite;
+      }
     }
   }
 

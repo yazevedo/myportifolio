@@ -2,20 +2,21 @@
 
   <!-- HEADER -->
   <header class="hero-header">
-    <div class="logo">
-      <span class="logo-text">YASMIN</span>
-    </div>
+<div class="logo">
+  <img src="/imagens/laco-neon.jpeg" alt="" class="logo-bow-img" />
+  <span class="logo-text">PORTIFOLIO</span>
+</div>
 
     <nav class="nav">
       <a href="#home" class="active">HOME</a>
-      <a href="#about">ABOUT ME</a>
-      <a href="#projects">PROJECTS</a>
-      <a href="#services">SERVICES</a>
-      <a href="#contact">CONTACT</a>
+      <a href="#about">SOBRE MIM</a>
+      <a href="#projects">PROJETOS</a>
+      <a href="#services">SERVIÇOS</a>
+      <a href="#contact">CONTATO</a>
     </nav>
 
     <button class="lets-talk-btn">
-      LET'S TALK
+      VAMOS CONVERSAR
       <img src="/imagens/hello-kitty-rosto.jpeg" alt="Hello Kitty" class="btn-icon" />
     </button>
   </header>
@@ -25,13 +26,12 @@
 
     <!-- LADO ESQUERDO -->
     <div class="hero-text">
-      <h1 class="hero-title">
-        {{ displayedPrefix }}<span class="highlight">{{ displayedName }}</span><span class="cursor">|</span>
-      </h1>
+   <h1 class="hero-title">
+  {{ displayedPrefix() }}<span class="highlight">{{ displayedName() }}</span><span class="cursor" [class.blinking]="typingDone()">|</span>
+</h1>
 
       <p class="hero-description">
-        Aspiring Full Stack Developer passionate about blending creativity and code.
-        Specialized in React and API integration. Let's create something beautiful.
+        Estudante de desenvolvimento de sistemas, experiencia na producao de sites web.
       </p>
 
       <div class="social-icons">
@@ -69,12 +69,12 @@
       <img src="/imagens/laco-neon.jpeg" class="deco orbit orbit-8" alt="" />
 
       <img
-        [src]="currentAvatar"
-        (mouseenter)="onAvatarHover(true)"
-        (mouseleave)="onAvatarHover(false)"
-        alt="Yasmin avatar"
-        class="avatar-img"
-      />
+  [src]="currentAvatar()"
+  (mouseenter)="onAvatarHover(true)"
+  (mouseleave)="onAvatarHover(false)"
+  alt="Yasmin avatar"
+  class="avatar-img"
+/>
     </div>
 
   </div>

@@ -1,0 +1,173 @@
+.about-me {
+  position: relative;
+  background: #0e0e10;
+  color: #eaeaea;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+// ---------- TERMINAL DE BOOT ----------
+.boot-terminal {
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  color: #cfcfcf;
+  max-width: 480px;
+  width: 100%;
+
+  .line {
+    margin: 0.25rem 0;
+
+    &.success { color: #7ee787; }
+  }
+
+  .cursor {
+    color: #ff8fab;
+    &.blink { animation: blink 0.8s step-end infinite; }
+  }
+
+  .final-cursor {
+    display: inline-block;
+    margin-top: 0.4rem;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+// ---------- JANELA about_me.exe ----------
+.exe-window {
+  width: 100%;
+  max-width: 560px;
+  background: #17171a;
+  border: 1px solid rgba(255, 143, 171, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(255, 143, 171, 0.15);
+  overflow: hidden;
+  transform: scale(0.85);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+
+  &.show {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.exe-titlebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f1f23;
+  padding: 0.5rem 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #cfcfcf;
+  border-bottom: 1px solid rgba(255, 143, 171, 0.2);
+
+  .exe-controls {
+    letter-spacing: 0.3em;
+    color: #7a7a7a;
+  }
+}
+
+.exe-body {
+  padding: 1.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  max-height: 60vh;
+  overflow-y: auto;
+
+  .term-line {
+    margin: 0.3rem 0;
+    color: #eaeaea;
+    line-height: 1.5;
+
+    &.success { color: #7ee787; }
+    &.highlight { color: #ff8fab; font-weight: 600; }
+    &.error-line { color: #ff5f5f; font-weight: 700; }
+  }
+}
+
+.files-block {
+  margin-top: 1rem;
+  border-top: 1px dashed rgba(255, 143, 171, 0.2);
+  padding-top: 1rem;
+}
+
+.file-section {
+  margin: 0.8rem 0;
+  padding-left: 0.6rem;
+  border-left: 2px solid rgba(255, 143, 171, 0.3);
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
+
+  &.active { opacity: 1; }
+}
+
+.json-block {
+  margin: 0.8rem 0;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border-left: 2px solid rgba(255, 143, 171, 0.3);
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
+
+  &.active { opacity: 1; }
+
+  .json-line { color: #ffc9dd; }
+}
+
+.bug-block {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(255, 143, 171, 0.2);
+
+  &.glitch {
+    animation: glitch-shake 0.3s ease;
+  }
+}
+
+.controls {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 0.6rem;
+  z-index: 5;
+
+  .control-btn {
+    background: rgba(255, 143, 171, 0.12);
+    border: 1px solid rgba(255, 143, 171, 0.4);
+    color: #ff8fab;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 143, 171, 0.25);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+@keyframes glitch-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+}

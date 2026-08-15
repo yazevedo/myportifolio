@@ -1,0 +1,105 @@
+<section class="about-me" #aboutSection [class.active]="phase() !== 'idle'">
+
+  @if (phase() !== 'idle') {
+    <div class="controls">
+      <button class="control-btn" (click)="toggleSpeed()">
+        {{ speedMultiplier() === 1 ? '⚡ Acelerar' : '🐢 Normal' }}
+      </button>
+      <button class="control-btn" (click)="replay()" [disabled]="isRunning()">
+        ↺ Ler novamente
+      </button>
+    </div>
+  }
+
+  <!-- resto do template continua igual -->
+
+<section class="about-me" #aboutSection [class.active]="phase() !== 'idle'">
+
+  @if (phase() === 'boot') {
+    <div class="boot-terminal">
+      @if (bootCursorOnly()) {
+        <p class="line">$ <span class="cursor blink">_</span></p>
+      }
+      @for (line of bootLines(); track $index) {
+        <p class="line" [class.success]="line.startsWith('✓')">{{ line }}</p>
+      }
+      @if (bootProgress() > 0 && bootProgress() < 100) {
+        <p class="line">{{ '█'.repeat(bootProgress() / 5) }} {{ bootProgress() }}%</p>
+      }
+      @if (bootDone()) {
+        <span class="cursor blink final-cursor">_</span>
+      }
+    </div>
+  }
+
+  @if (phase() !== 'boot' && phase() !== 'idle') {
+    <div class="exe-window" [class.show]="windowVisible()">
+      <div class="exe-titlebar">
+        <span>about_me.exe</span>
+        <span class="exe-controls">─ □ ×</span>
+      </div>
+
+      <div class="exe-body">
+        @for (line of introLines(); track $index) {
+          <p class="term-line">{{ line }}</p>
+        }
+
+        @if (phase() === 'files') {
+          <div class="files-block">
+            @for (line of lsLines(); track $index) {
+              <p class="term-line">{{ line }}</p>
+            }
+
+            @if (aboutTxtLines().length) {
+              <div class="file-section" [class.active]="currentFile() === 'about_me.txt'">
+                @for (line of aboutTxtLines(); track $index) {
+                  <p class="term-line">{{ line }}</p>
+                }
+              </div>
+            }
+
+            @if (jsonLines().length) {
+              <div class="json-block" [class.active]="currentFile() === 'developer_profile.json'">
+                @for (line of jsonLines(); track $index) {
+                  <p class="term-line json-line">{{ line }}</p>
+                }
+              </div>
+            }
+
+            @if (howLines().length) {
+              <div class="file-section" [class.active]="currentFile() === 'how_i_think.txt'">
+                @for (line of howLines(); track $index) {
+                  <p class="term-line" [class.success]="line.startsWith('✓')">{{ line }}</p>
+                }
+              </div>
+            }
+
+            @if (bugStage() !== 'idle') {
+              <div class="bug-block" [class.glitch]="bugGlitch()">
+                <p class="term-line">$ npm run project</p>
+                <p class="term-line">Compiling...</p>
+                <p class="term-line">{{ '█'.repeat(bugProgress() / 5) }}{{ '░'.repeat(20 - bugProgress() / 5) }} {{ bugProgress() }}%</p>
+
+                @if (bugStage() === 'error' || bugStage() === 'fixing' || bugStage() === 'fixed') {
+                  <p class="term-line error-line">ERROR!</p>
+                  <p class="term-line">Error detected.</p>
+                  <p class="term-line">Developer reaction: 😐</p>
+                }
+
+                @if (bugStage() === 'fixing' || bugStage() === 'fixed') {
+                  <p class="term-line">&gt; debugging...</p>
+                }
+
+                @if (bugStage() === 'fixed') {
+                  <p class="term-line success">✓ error fixed</p>
+                  <p class="term-line highlight">That's development.</p>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+</section>

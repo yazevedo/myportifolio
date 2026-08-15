@@ -1,1 +1,45 @@
-<p>intro-terminal works!</p>
+<div class="intro" [class.fade-out]="phase() === 'done'">
+
+  <!-- ESTRELINHAS -->
+  <div class="stars" [class.gathered]="phase() === 'gathering' || phase() === 'loading'">
+    @for (star of stars(); track star.id) {
+      <span
+        class="star"
+        [style.top]="star.top"
+        [style.left]="star.left"
+        [style.width.px]="star.size"
+        [style.height.px]="star.size"
+      >✦</span>
+    }
+  </div>
+
+  <!-- TERMINAL -->
+  @if (phase() === 'terminal' || phase() === 'gathering') {
+    <div class="terminal" [class.fade-out]="phase() === 'gathering'">
+      <p class="terminal-line">
+        {{ line1() }}<span class="term-cursor" [class.blink]="line1Done() && !line2().length">▌</span>
+      </p>
+      @if (line1Done()) {
+        <p class="terminal-line small">
+          {{ line2() }}<span class="term-cursor" [class.blink]="line2Done()">▌</span>
+        </p>
+      }
+    </div>
+  }
+
+  <!-- LOADING -->
+  @if (phase() === 'loading') {
+    <div class="loading-box">
+      <p class="app-title">YASMIN.EXE</p>
+      <p class="loading-label">INITIALIZING PORTFOLIO...</p>
+
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress()"></div>
+      </div>
+      <p class="progress-pct">{{ progress() }}%</p>
+
+      <p class="loading-msg">&gt; {{ loadingMessage() }}</p>
+    </div>
+  }
+
+</div>

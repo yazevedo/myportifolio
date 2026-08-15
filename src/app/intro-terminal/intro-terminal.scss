@@ -1,0 +1,145 @@
+.intro {
+  position: fixed;
+  inset: 0;
+  background: #0e0e10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: 'Poppins', monospace;
+  color: #fff;
+  overflow: hidden;
+  transition: opacity 0.6s ease;
+
+  &.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+// ---------- ESTRELINHAS ----------
+.stars {
+  position: absolute;
+  inset: 0;
+
+  .star {
+    position: absolute;
+    color: #ff8fab;
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0;
+    animation: twinkle-in 1.6s ease forwards;
+    transition: top 0.9s ease, left 0.9s ease;
+    text-shadow: 0 0 8px rgba(255, 143, 171, 0.8);
+  }
+
+  &.gathered .star {
+    top: 50% !important;
+    left: 50% !important;
+    opacity: 0;
+  }
+}
+
+@keyframes twinkle-in {
+  0%   { opacity: 0; transform: scale(0.3); }
+  30%  { opacity: 1; transform: scale(1.2); }
+  50%  { opacity: 0.7; transform: scale(0.9); }
+  70%  { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.6; transform: scale(1); }
+}
+
+// ---------- TERMINAL ----------
+.terminal {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  transition: opacity 0.5s ease;
+
+  &.fade-out { opacity: 0; }
+
+  .terminal-line {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    color: #eaeaea;
+    margin: 0.3rem 0;
+
+    &.small {
+      font-size: 0.95rem;
+      color: #ff8fab;
+    }
+  }
+
+  .term-cursor {
+    display: inline-block;
+    margin-left: 2px;
+    color: #ff8fab;
+    opacity: 0;
+
+    &.blink {
+      opacity: 1;
+      animation: blink 0.8s step-end infinite;
+    }
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+// ---------- LOADING ----------
+.loading-box {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  animation: fade-in 0.6s ease;
+
+  .app-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ff8fab;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+
+  .loading-label {
+    font-size: 0.8rem;
+    color: #cfcfcf;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .progress-bar {
+    width: 280px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff8fab, #ffc9dd);
+    border-radius: 4px;
+    transition: width 0.1s linear;
+  }
+
+  .progress-pct {
+    font-size: 0.85rem;
+    color: #ff8fab;
+    margin: 0.5rem 0;
+  }
+
+  .loading-msg {
+    font-size: 0.8rem;
+    color: #9d9d9d;
+    min-height: 1.2rem;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

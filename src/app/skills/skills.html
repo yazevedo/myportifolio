@@ -8,38 +8,96 @@
     <span class="particle p3" [style.transform]="'translateY(' + (-scrollProgress() * 40) + 'px)'">✦</span>
     <span class="particle p4" [style.transform]="'translateY(' + (-scrollProgress() * 80) + 'px)'">✧</span>
     <span class="particle p5" [style.transform]="'translateY(' + (-scrollProgress() * 50) + 'px)'">✦</span>
+    <span class="particle p6" [style.transform]="'translateY(' + (-scrollProgress() * 70) + 'px)'">✦</span>
+    <span class="particle p7" [style.transform]="'translateY(' + (-scrollProgress() * 90) + 'px)'">✧</span>
+  </div>
+
+  <div class="deco-lines">
+    <span class="deco-line l1"></span>
+    <span class="deco-line l2"></span>
+    <span class="deco-line l3"></span>
   </div>
 
   <h2 class="skills-title">
     {{ titleText() }}<span class="title-cursor" [class.blink]="titleDone()">|</span>
   </h2>
 
-  <div class="skills-orbit" [class.show]="techsVisible()">
-    @for (tech of techs(); track tech.name) {
-      <div
-        class="tech-item"
-        [style.transform]="'translate(' + tech.x + 'px, ' + tech.y + 'px)'"
-      >
-        <span class="tech-name">{{ tech.name }}</span>
-        <span class="tech-tooltip">{{ tech.description }}</span>
-        <span class="tech-particles">
-          <i></i><i></i><i></i>
-        </span>
-      </div>
-    }
+  <div class="skills-layout">
+
+    <!-- PONTOS FORTES -->
+    <div class="side-panel left" [class.show]="panelsVisible()">
+      <h3 class="panel-title">PONTOS FORTES</h3>
+      @for (item of strengths; track item.title) {
+        <div class="panel-item">
+          <span class="panel-icon">{{ item.icon }}</span>
+          <div class="panel-text">
+            <p class="panel-item-title">{{ item.title }}</p>
+            <p class="panel-item-desc">{{ item.description }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- ÓRBITA -->
+    <div class="skills-orbit" [class.show]="techsVisible()">
+      @for (tech of techs(); track tech.name) {
+        <div
+          class="tech-item"
+          [style.transform]="'translate(' + tech.x + 'px, ' + tech.y + 'px)'"
+        >
+          <span class="tech-name">{{ tech.name }}</span>
+          <span class="tech-tooltip">{{ tech.description }}</span>
+          <span class="tech-particles">
+            <i></i><i></i><i></i>
+          </span>
+        </div>
+      }
+    </div>
+
+    <!-- EM DESENVOLVIMENTO -->
+    <div class="side-panel right" [class.show]="panelsVisible()">
+      <h3 class="panel-title">EM DESENVOLVIMENTO</h3>
+      @for (item of improvements; track item.title) {
+        <div class="panel-item">
+          <span class="panel-icon">{{ item.icon }}</span>
+          <div class="panel-text">
+            <p class="panel-item-title">{{ item.title }}</p>
+            <p class="panel-item-desc">{{ item.description }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
   </div>
 
-  <div class="cat-terminal" [class.show]="catStage() !== 'idle'">
-    @if (catStage() !== 'idle') {
-      <p class="term-line">$ sudo create_cat</p>
+  <!-- TERMINAL DO GATINHO -->
+  <div
+    class="cat-terminal"
+    [class.show]="catStage() !== 'idle' && catStage() !== 'mini'"
+    [class.mini]="catStage() === 'mini'"
+  >
+    @if (catStage() !== 'mini') {
+      @if (catStage() !== 'idle') {
+        <p class="term-line">$ sudo create_cat</p>
+      }
+      @if (catStage() === 'loading' || catStage() === 'creating' || catStage() === 'log') {
+        <p class="term-line">initializing...</p>
+        <p class="term-line">{{ '█'.repeat(catProgress() / 4) }} {{ catProgress() }}%</p>
+      }
+      @if (catStage() === 'creating' || catStage() === 'log') {
+        <p class="term-line">creating cat...</p>
+      }
+      @if (catStage() === 'log') {
+        @for (line of catLogLines(); track $index) {
+          <p class="term-line log-line">{{ line }}</p>
+        }
+      }
+      @if (catStage() === 'creating' || catStage() === 'log') {
+        <pre class="cat-ascii">{{ catAscii() }}</pre>
+      }
     }
-    @if (catStage() === 'loading' || catStage() === 'creating' || catStage() === 'done') {
-      <p class="term-line">initializing...</p>
-      <p class="term-line">{{ '█'.repeat(catProgress() / 4) }} {{ catProgress() }}%</p>
-    }
-    @if (catStage() === 'creating' || catStage() === 'done') {
-      <p class="term-line">creating cat...</p>
-      <pre class="cat-ascii">{{ catAscii() }}</pre>
+    @if (catStage() === 'mini') {
+      <pre class="cat-ascii mini-ascii">{{ catAscii() }}</pre>
     }
   </div>
 

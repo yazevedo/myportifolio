@@ -4,7 +4,7 @@
   color: #fff;
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
-  padding: 4rem;
+  padding: 4rem 2rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -57,6 +57,26 @@
   .p3 { top: 60%; left: 8%; }
   .p4 { top: 70%; right: 12%; }
   .p5 { top: 40%; left: 50%; }
+  .p6 { top: 85%; left: 25%; }
+  .p7 { top: 12%; left: 45%; }
+}
+
+// ---------- LINHAS DECORATIVAS ----------
+.deco-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  .deco-line {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, rgba(255, 143, 171, 0.25), transparent);
+    height: 1px;
+  }
+
+  .l1 { top: 22%; left: 5%; width: 180px; transform: rotate(12deg); }
+  .l2 { bottom: 18%; right: 8%; width: 220px; transform: rotate(-10deg); }
+  .l3 { top: 55%; left: 2%; width: 140px; transform: rotate(-6deg); }
 }
 
 // ---------- TÍTULO ----------
@@ -86,13 +106,85 @@
   50% { opacity: 0; }
 }
 
+// ---------- LAYOUT GERAL ----------
+.skills-layout {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  flex-wrap: wrap;
+}
+
+// ---------- PAINÉIS LATERAIS (glassmorphism) ----------
+.side-panel {
+  width: 260px;
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 143, 171, 0.2);
+  border-radius: 16px;
+  padding: 1.4rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &.left { transition-delay: 0.1s; }
+  &.right { transition-delay: 0.3s; }
+
+  .panel-title {
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    color: #ff8fab;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .panel-item {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+
+    &:last-child { margin-bottom: 0; }
+  }
+
+  .panel-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .panel-item-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #eaeaea;
+    margin-bottom: 0.2rem;
+  }
+
+  .panel-item-desc {
+    font-size: 0.72rem;
+    color: #9d9d9d;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 1000px) {
+  .side-panel { width: 100%; max-width: 420px; }
+}
+
 // ---------- ÓRBITA DE TECNOLOGIAS ----------
 .skills-orbit {
   position: relative;
-  z-index: 2;
   width: 100%;
-  max-width: 620px;
+  max-width: 500px;
   height: 340px;
+  flex-shrink: 0;
 }
 
 .tech-item {
@@ -164,10 +256,12 @@
   }
 }
 
-// ---------- TERMINAL DO GATINHO (integrado, não mais no canto) ----------
+// ---------- TERMINAL DO GATINHO ----------
 .cat-terminal {
-  position: relative;
-  z-index: 2;
+  position: fixed;
+  z-index: 3;
+  bottom: 2rem;
+  right: 2rem;
   width: 280px;
   background: rgba(20, 20, 22, 0.6);
   backdrop-filter: blur(10px);
@@ -179,7 +273,7 @@
   color: #cfcfcf;
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease, width 0.6s ease, padding 0.6s ease;
   animation: float-terminal 4s ease-in-out infinite;
   box-shadow: 0 0 30px rgba(255, 143, 171, 0.15);
 
@@ -191,6 +285,8 @@
   .term-line {
     margin: 0.2rem 0;
     color: #ff8fab;
+
+    &.log-line { color: #cfcfcf; }
   }
 
   .cat-ascii {
@@ -199,6 +295,27 @@
     white-space: pre;
     font-size: 0.85rem;
     line-height: 1.3;
+  }
+
+  // versão "assinatura" encolhida
+  &.mini {
+    width: 60px;
+    padding: 0.5rem;
+    opacity: 0.7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: float-terminal 4s ease-in-out infinite;
+
+    &:hover { opacity: 1; }
+
+    .mini-ascii {
+      font-size: 0.4rem;
+      margin: 0;
+      text-align: center;
+      color: #ff8fab;
+    }
   }
 }
 

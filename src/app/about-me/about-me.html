@@ -1,19 +1,30 @@
 <section class="about-me" #aboutSection [class.active]="phase() !== 'idle'">
 
   @if (phase() !== 'idle') {
-    <div class="controls">
-      <button class="control-btn" (click)="toggleSpeed()">
-        {{ speedMultiplier() === 1 ? '⚡ Acelerar' : '🐢 Normal' }}
-      </button>
-      <button class="control-btn" (click)="replay()" [disabled]="isRunning()">
-        ↺ Ler novamente
-      </button>
-    </div>
+    <pre
+      class="giant-code"
+      [style.transform]="'translateY(' + (-scrollOffset() * 40) + 'px)'"
+    >@for (line of giantCode; track $index) {
+{{ line }}
+}</pre>
   }
 
-  <!-- resto do template continua igual -->
-
-<section class="about-me" #aboutSection [class.active]="phase() !== 'idle'">
+  @if (phase() !== 'idle') {
+    <div class="code-particles">
+      <span class="cp cp1">0</span>
+      <span class="cp cp2">1</span>
+      <span class="cp cp3">&lt;/&gt;</span>
+      <span class="cp cp4">{{ '{' }}</span>
+      <span class="cp cp5">01</span>
+      <span class="cp cp6">;</span>
+      <span class="cp cp7">1101</span>
+      <span class="cp cp8">_</span>
+      <span class="cp cp9">*</span>
+      <span class="cp cp10">+</span>
+      <span class="cp cp11">✦</span>
+      <span class="cp cp12">✧</span>
+    </div>
+  }
 
   @if (phase() === 'boot') {
     <div class="boot-terminal">
@@ -33,6 +44,45 @@
   }
 
   @if (phase() !== 'boot' && phase() !== 'idle') {
+    <div class="controls">
+      <button class="control-btn" (click)="toggleSpeed()">
+        {{ speedMultiplier() === 1 ? '⚡ Acelerar' : '🐢 Normal' }}
+      </button>
+      <button class="control-btn" (click)="replay()" [disabled]="isRunning()">
+        ↺ Ler novamente
+      </button>
+    </div>
+  }
+
+  @if (phase() === 'window' || phase() === 'files') {
+    <div class="mini-window system-log">
+      <div class="mini-titlebar">system.log</div>
+      <div class="mini-body">
+        @for (line of systemLogLines; track $index) {
+          <p>{{ line }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="mini-window terminal-status">
+      <div class="mini-titlebar">terminal</div>
+      <div class="mini-body">
+        <p>$ status</p>
+        <p>ONLINE <span class="dot"></span></p>
+      </div>
+    </div>
+
+    <div class="mini-window developer-status">
+      <div class="mini-titlebar">developer.exe</div>
+      <div class="mini-body">
+        <p>● ONLINE</p>
+        <div class="xp-bar"><div class="xp-fill"></div></div>
+        <p class="xp-label">XP</p>
+      </div>
+    </div>
+  }
+
+  @if (phase() !== 'boot' && phase() !== 'idle') {
     <div class="exe-window" [class.show]="windowVisible()">
       <div class="exe-titlebar">
         <span>about_me.exe</span>
@@ -44,7 +94,7 @@
           <p class="term-line">{{ line }}</p>
         }
 
-        @if (phase() === 'files') {
+        @if (phase() === 'files' || phase() === 'closing') {
           <div class="files-block">
             @for (line of lsLines(); track $index) {
               <p class="term-line">{{ line }}</p>
@@ -96,9 +146,35 @@
                 }
               </div>
             }
+
+            @if (closingLines().length) {
+              <div class="closing-block">
+                @for (line of closingLines(); track $index) {
+                  <p class="term-line" [class.success]="line.includes('✓')">{{ line }}</p>
+                }
+              </div>
+            }
           </div>
         }
       </div>
+    </div>
+  }
+
+  @if (phase() === 'closing') {
+    <div class="mini-cd-terminal">
+      @if (cdCursorOnly()) {
+        <p class="line">$ <span class="cursor blink">_</span></p>
+      }
+      @for (line of cdLines(); track $index) {
+        <p
+          class="line cd-line"
+          [class.cd-ready]="cdReady()"
+          (click)="onCdProjectsClick()"
+        >{{ line }}</p>
+      }
+      @for (line of navLines(); track $index) {
+        <p class="line">{{ line }}</p>
+      }
     </div>
   }
 

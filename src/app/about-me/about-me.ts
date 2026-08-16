@@ -1,7 +1,7 @@
-import { Component, ElementRef, signal, viewChild, afterNextRender } from '@angular/core';
+import { Component, ElementRef, HostListener, signal, viewChild, afterNextRender, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-type Phase = 'idle' | 'boot' | 'window' | 'files' | 'done';
+type Phase = 'idle' | 'boot' | 'window' | 'files' | 'closing' | 'done';
 
 @Component({
   selector: 'app-about-me',
@@ -13,11 +13,16 @@ export class AboutMe {
 
   sectionRef = viewChild<ElementRef<HTMLElement>>('aboutSection');
 
+  finished = output<void>();
+
   phase = signal<Phase>('idle');
 
   // --- controle de velocidade e replay ---
   speedMultiplier = signal(1);
   isRunning = signal(false);
+
+  // --- parallax de fundo ---
+  scrollOffset = signal(0);
 
   // --- boot terminal ---
   bootLines = signal<string[]>([]);
@@ -40,6 +45,28 @@ export class AboutMe {
   bugProgress = signal(0);
   bugStage = signal<'idle' | 'compiling' | 'error' | 'fixing' | 'fixed'>('idle');
   bugGlitch = signal(false);
+
+  // --- fechamento e prompt "cd projects" ---
+  closingLines = signal<string[]>([]);
+  cdCursorOnly = signal(false);
+  cdLines = signal<string[]>([]);
+  cdReady = signal(false);
+  navigating = signal(false);
+  navLines = signal<string[]>([]);
+
+  // --- mini janelas decorativas ---
+  systemLogLines = ['> booting...', '> developer found', '> profile loaded'];
+  giantCode = [
+    'const developer = new Developer();',
+    'developer.learn();',
+    'developer.build();',
+    'developer.debug();',
+    'developer.create();',
+    '',
+    'while (true) {',
+    '    developer.keepLearning();',
+    '}',
+  ];
 
   private hasTriggered = false;
 
@@ -70,6 +97,18 @@ export class AboutMe {
     observer.observe(el);
   }
 
+  @HostListener('window:scroll')
+  onScroll(): void {
+    const el = this.sectionRef()?.nativeElement;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const windowH = window.innerHeight;
+    const raw = 1 - (rect.top + rect.height / 2) / (windowH + rect.height);
+    const clamped = Math.min(Math.max(raw, 0), 1);
+    this.scrollOffset.set(clamped);
+  }
+
   toggleSpeed(): void {
     this.speedMultiplier.set(this.speedMultiplier() === 1 ? 2.5 : 1);
   }
@@ -77,7 +116,6 @@ export class AboutMe {
   replay(): void {
     if (this.isRunning()) return;
 
-    // reseta tudo
     this.phase.set('idle');
     this.bootLines.set([]);
     this.bootCursorOnly.set(true);
@@ -93,16 +131,20 @@ export class AboutMe {
     this.bugProgress.set(0);
     this.bugStage.set('idle');
     this.bugGlitch.set(false);
+    this.closingLines.set([]);
+    this.cdCursorOnly.set(false);
+    this.cdLines.set([]);
+    this.cdReady.set(false);
+    this.navigating.set(false);
+    this.navLines.set([]);
 
     this.runSequence();
   }
 
   private delay(ms: number): Promise<void> {
-    // sensível ao botão de acelerar em tempo real (mesmo no meio de uma linha)
     return new Promise(resolve => setTimeout(resolve, ms / this.speedMultiplier()));
   }
 
-  /** pausas de leitura NÃO são aceleradas — a pessoa sempre tem tempo de ler */
   private readingPause(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -224,19 +266,17 @@ export class AboutMe {
 
     await this.readingPause(1600);
 
-    // about_me.txt
     this.currentFile.set('about_me.txt');
     await this.appendTypedLine(this.aboutTxtLines, '> opening about_me.txt', 55, 0);
     await this.readingPause(900);
     await this.appendTypedLine(
       this.aboutTxtLines,
-      'Comecei minha jornada na programação no SENAI, onde descobri o gosto por transformar ideias em interfaces reais. De lá para cá, venho me dedicando ao desenvolvimento web de forma consistente, unindo o aprendizado técnico da FIAP à experiência prática de construir projetos completos: interfaces responsivas, integração com APIs e estruturação de bancos de dados. Também já atuei como assistente administrativa, o que me deu uma visão prática de como um negócio funciona por dentro e é exatamente essa visão que trago para cada projeto que desenvolvo: tecnologia a serviço de um resultado real.',
+      'Comecei minha jornada na programação no SENAI, onde descobri o gosto por transformar ideias em interfaces reais. De lá para cá, venho me dedicando ao desenvolvimento web de forma consistente, unindo o aprendizado técnico da FIAP à experiência prática de construir projetos completos: interfaces responsivas, integração com APIs e estruturação de bancos de dados. Também já atuei como assistente administrativa, o que me deu uma visão prática de como um negócio funciona por dentro — e é exatamente essa visão que trago para cada projeto que desenvolvo: tecnologia a serviço de um resultado real.',
       40,
       0.02
     );
     await this.readingPause(3600);
 
-    // developer_profile.json
     this.currentFile.set('developer_profile.json');
     const jsonSteps = [
       '{',
@@ -266,7 +306,6 @@ export class AboutMe {
     }
     await this.readingPause(3200);
 
-    // how_i_think.txt
     this.currentFile.set('how_i_think.txt');
     await this.appendTypedLine(this.howLines, '$ cat how_i_think.txt', 55, 0);
     await this.readingPause(900);
@@ -292,7 +331,7 @@ export class AboutMe {
     await this.readingPause(900);
     await this.appendTypedLine(
       this.howLines,
-      'Antes de escrever qualquer linha de código, procuro entender o problema por completo. Pesquiso, divido em partes menores, implemento aos poucos e testo constantemente para mim, errar faz parte do processo de aprender e de entregar um trabalho cada vez melhor.',
+      'Antes de escrever qualquer linha de código, procuro entender o problema por completo. Pesquiso, divido em partes menores, implemento aos poucos e testo constantemente — para mim, errar faz parte do processo de aprender e de entregar um trabalho cada vez melhor.',
       40,
       0.02
     );
@@ -323,8 +362,46 @@ export class AboutMe {
 
     await this.readingPause(800);
     this.bugStage.set('fixed');
+    await this.readingPause(1600);
+
+    await this.runClosingSequence();
+  }
+
+  private async runClosingSequence(): Promise<void> {
+    this.phase.set('closing');
+    await this.appendTypedLine(this.closingLines, '> profile loaded successfully.', 55, 0);
+    await this.readingPause(500);
+    await this.appendInstantLine(this.closingLines, 'developer verified ✓');
+    await this.readingPause(600);
+    await this.appendTypedLine(this.closingLines, '> closing about_me.exe...', 55, 0);
     await this.readingPause(1200);
-    this.phase.set('done');
+
+    this.windowVisible.set(false);
+    await this.readingPause(1000);
+
+    this.cdCursorOnly.set(true);
+    await this.readingPause(1300);
+    this.cdCursorOnly.set(false);
+
+    await this.appendTypedLine(this.cdLines, '$ cd projects', 60, 0);
+    this.cdReady.set(true);
+
     this.isRunning.set(false);
+  }
+
+  async onCdProjectsClick(): Promise<void> {
+    if (!this.cdReady() || this.navigating()) return;
+
+    this.cdReady.set(false);
+    this.navigating.set(true);
+
+    await this.appendTypedLine(this.navLines, '> changing directory...', 50, 0);
+    await this.readingPause(600);
+    await this.appendTypedLine(this.navLines, '> accessing /projects...', 50, 0);
+    await this.readingPause(500);
+    await this.appendTypedLine(this.navLines, '> loading projects...', 50, 0);
+    await this.readingPause(700);
+
+    this.finished.emit();
   }
 }

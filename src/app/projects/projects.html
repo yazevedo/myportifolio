@@ -1,0 +1,69 @@
+<section class="projects" #projectsSection>
+
+  <img src="/imagens/hello-kitty-nerd" alt="" class="bg-kitty" />
+
+  @if (phase() !== 'idle') {
+    <div class="terminal-block">
+      @for (line of introLines(); track $index) {
+        <p class="term-line">{{ line }}</p>
+      }
+    </div>
+  }
+
+  @if (phase() === 'listing' || phase() === 'frontend' || phase() === 'backend') {
+    <div class="terminal-block">
+      @for (line of folderLines(); track $index) {
+        <p
+          class="term-line"
+          [class.folder-line]="line === 'frontend/' || line === 'backend/'"
+          (click)="line === 'frontend/' ? openFrontend() : (line === 'backend/' ? openBackend() : null)"
+        >{{ line }}</p>
+      }
+    </div>
+  }
+
+  @if (phase() === 'frontend') {
+    <div class="terminal-block">
+      @for (line of frontendLines(); track $index) {
+        <p class="term-line">{{ line }}</p>
+      }
+    </div>
+
+    <div class="carousel">
+      <button class="arrow left" (click)="prev()">←</button>
+
+      <div class="carousel-track">
+        @for (project of projects; track project.name; let i = $index) {
+          <div class="project-card" [class]="getSlotClass(i)">
+            <div class="project-image">
+              <img [src]="project.image" [alt]="project.name" />
+            </div>
+            <p class="project-counter">{{ (i + 1).toString().padStart(2, '0') }} / {{ projects.length.toString().padStart(2, '0') }}</p>
+            <h3 class="project-name">{{ project.name }}</h3>
+            <p class="project-desc">{{ project.description }}</p>
+            <div class="project-tech">
+              @for (tech of project.tech; track tech) {
+                <span class="tech-tag">{{ tech }}</span>
+              }
+            </div>
+            <div class="project-links">
+              <a [href]="project.github" target="_blank" class="project-link">GitHub</a>
+              <a [href]="project.demo" target="_blank" class="project-link">Live Demo</a>
+            </div>
+          </div>
+        }
+      </div>
+
+      <button class="arrow right" (click)="next()">→</button>
+    </div>
+  }
+
+  @if (phase() === 'backend') {
+    <div class="terminal-block backend-block">
+      @for (line of backendLines(); track $index) {
+        <p class="term-line" [class.construction]="line.includes('under construction')">{{ line }}</p>
+      }
+    </div>
+  }
+
+</section>

@@ -10,6 +10,12 @@ interface Tech {
   y: number;
 }
 
+interface StrengthItem {
+  icon: string;
+  title: string;
+  description: string;
+}
+
 @Component({
   selector: 'app-skills',
   imports: [CommonModule],
@@ -24,12 +30,14 @@ export class Skills {
   titleText = signal('');
   titleDone = signal(false);
   techsVisible = signal(false);
+  panelsVisible = signal(false);
 
   scrollProgress = signal(0);
 
-  catStage = signal<'idle' | 'booting' | 'loading' | 'creating' | 'done'>('idle');
+  catStage = signal<'idle' | 'booting' | 'loading' | 'creating' | 'log' | 'mini'>('idle');
   catProgress = signal(0);
   catAscii = signal('');
+  catLogLines = signal<string[]>([]);
 
   techs = signal<Tech[]>([
     { name: 'HTML', description: 'Estrutura semântica', angle: 270, radius: 190, x: 0, y: 0 },
@@ -40,8 +48,24 @@ export class Skills {
     { name: 'MySQL / MariaDB', description: 'Banco de dados', angle: 210, radius: 190, x: 0, y: 0 },
   ]);
 
+  strengths: StrengthItem[] = [
+    { icon: '✨', title: 'Criatividade', description: 'Gosto de transformar ideias em experiências digitais diferentes.' },
+    { icon: '🧩', title: 'Resolução de problemas', description: 'Busco entender a causa do problema antes de simplesmente corrigir o erro.' },
+    { icon: '📚', title: 'Facilidade para aprender', description: 'Tenho interesse em aprender novas tecnologias e expandir meus conhecimentos.' },
+    { icon: '🎨', title: 'Atenção aos detalhes', description: 'Me preocupo com a experiência visual e os pequenos detalhes das interfaces.' },
+    { icon: '💡', title: 'Curiosidade', description: 'Gosto de entender como as coisas funcionam e experimentar novas possibilidades.' },
+  ];
+
+  improvements: StrengthItem[] = [
+    { icon: '🔹', title: 'Aprofundar back-end', description: 'Buscando evoluir cada vez mais na construção de APIs e aplicações.' },
+    { icon: '🔹', title: 'Arquitetura de software', description: 'Aprimorando meus conhecimentos sobre organização e estruturação de aplicações.' },
+    { icon: '🔹', title: 'Testes automatizados', description: 'Estudando melhores práticas para criar aplicações mais confiáveis.' },
+    { icon: '🔹', title: 'Inglês técnico', description: 'Continuando a desenvolver minha comunicação e compreensão no contexto profissional.' },
+  ];
+
   private fullTitle = 'SKILLS';
   private fullCatAscii = ' /\\_/\\\n( o.o )\n > ^ <';
+  private fullCatAsciiLog = ' /\\_/\\\n( •.• )\n > ^ <';
   private hasTriggered = false;
   private orbitInterval: any;
 
@@ -99,6 +123,23 @@ export class Skills {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  private async appendTypedLine(list: ReturnType<typeof signal<string[]>>, text: string, speed = 25): Promise<void> {
+    const index = list().length;
+    list.update(l => [...l, '']);
+    for (let i = 0; i < text.length; i++) {
+      list.update(l => {
+        const copy = [...l];
+        copy[index] = text.slice(0, i + 1);
+        return copy;
+      });
+      await this.delay(speed);
+    }
+  }
+
+  private async appendInstantLine(list: ReturnType<typeof signal<string[]>>, text: string): Promise<void> {
+    list.update(l => [...l, text]);
+  }
+
   private async runSequence(): Promise<void> {
     for (let i = 0; i < this.fullTitle.length; i++) {
       this.titleText.update(t => t + this.fullTitle.charAt(i));
@@ -109,7 +150,9 @@ export class Skills {
     await this.delay(300);
     this.techsVisible.set(true);
 
-    // depois que elas "chegam", começa a orbitar devagar pra sempre
+    await this.delay(600);
+    this.panelsVisible.set(true);
+
     await this.delay(1000);
     this.startOrbit();
 
@@ -118,7 +161,7 @@ export class Skills {
   }
 
   private startOrbit(): void {
-    const speed = 0.06; // graus por tick — bem devagar
+    const speed = 0.06;
     this.orbitInterval = setInterval(() => {
       this.techs.update(list =>
         list.map(t => ({ ...t, angle: t.angle + speed }))
@@ -145,7 +188,25 @@ export class Skills {
       await this.delay(25);
     }
 
+    await this.delay(1200);
+
+    // segunda etapa: "cat developer.log"
+    this.catStage.set('log');
+    await this.appendTypedLine(this.catLogLines, '$ cat developer.log', 30);
     await this.delay(300);
-    this.catStage.set('done');
+    await this.appendInstantLine(this.catLogLines, '> strengths detected ✓');
+    await this.delay(250);
+    await this.appendInstantLine(this.catLogLines, '> weaknesses detected ✓');
+    await this.delay(250);
+    await this.appendInstantLine(this.catLogLines, '> potential detected ✓');
+    await this.delay(250);
+    await this.appendInstantLine(this.catLogLines, '> developer is still under development...');
+
+    this.catAscii.set(this.fullCatAsciiLog);
+
+    await this.delay(2200);
+
+    // encolhe para uma "assinatura" no canto
+    this.catStage.set('mini');
   }
 }
